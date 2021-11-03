@@ -1,0 +1,21 @@
+helm template todo
+helm lint todo
+helm install todo ./todo --dry-run --debug
+
+helm install todo ./todo
+export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services todo)
+export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+echo http://$NODE_IP:$NODE_PORT
+
+helm list
+helm status todo
+kubectl get all
+helm package todo
+
+helm uninstall todo
+helm list
+kubectl get all
+
+helm cm-push ./todo-0.1.0.tgz chartmuseum
+helm search repo todo
+helm install todo ./todo-0.1.0.tgz
